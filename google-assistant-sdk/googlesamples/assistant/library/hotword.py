@@ -18,6 +18,7 @@
 from __future__ import print_function
 import argparse
 import json
+import alsaaudio
 import os.path
 import pathlib2 as pathlib
 
@@ -66,6 +67,16 @@ def process_event(event):
     if event.type == EventType.ON_DEVICE_ACTION:
         for command, params in event.actions:
             print('Do command', command, 'with params', str(params))
+            if command == "action.devices.commands.OnOff":
+                 if params['on']:
+                     print('Turning the LED on.')
+                 else:
+                     print('Turning the LED off.')
+            if command == "action.devices.commands.BrightnessAbsolute":
+                 m = alsaaudio.Mixer()
+                 #m = alsaaudio.Mixer('PCM')
+                 m.setvolume(params['brightness'])
+                 print('Turning volume to:', params['brightness'])
 
 
 def main():
